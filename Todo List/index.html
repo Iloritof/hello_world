@@ -26,8 +26,8 @@
                         <h1 class="heading">
                             Smart To-do List
                         </h1>
-                        <div class="current-time">
-                            %current-time%<span class="current-seconds">:%seconds%</span>
+                        <div class="time">
+                            <span class="current-time">%current-time%</span>:<span class="current-seconds">%seconds%</span>
                         </div>
                         <div class="current-date">
                             %current-date%
@@ -43,15 +43,15 @@
                                     <option value="medium">Medium</option>
                                     <option value="low">Low</option>
                                 </select>
-                                <input type="text" placeholder="What's on you mind?" class="input input-task" required>
+                                <input type="text" id="task-title" placeholder="What's on you mind?" class="input input-task" required>
                             </div>
 
                             <div class="add-task-bottom">
-                                <input type="date" name="" id="" class="input input-date" placeholder="Due date">
-                                <input type="time" name="" id="" class="input input-time" placeholder="">
-                                <a href="" class="btn btn-primary">
+                                <input type="date" name="date" id="date" class="input input-date" >
+                                <input type="time" name="time" id="time" class="input input-time" >
+                                <button id="submit" href="" class="btn btn-primary">
                                     Add Task
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
