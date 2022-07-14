@@ -55,15 +55,27 @@ const dataController = (function() {
 
         storeTask: function(obj) {
             // task.push(obj);
+            var item;
+            item = obj;
 
             if (tasks.length > 0) {
+                item.id = tasks[tasks.length - 1].id + 1;
                 tasks.push(obj);
             } else {
+                item.id = 0
                 tasks[0] = obj;
             }
         },
 
-        test: function() {
+        delTask: function(id) {
+            for (let i = 0; i < tasks.length; i++) {
+                if(id == tasks[i].id) {
+                    tasks.splice(i,1);
+                };
+            }
+        },
+
+        getTasks: function() {
             return tasks;
         }
     }
@@ -117,26 +129,11 @@ const uiController = (function() {
 
     function TaskTimeConstruct(obj) {
         this.hh = obj.time.slice(0,2);
-        this.mm = obj.time.slice(2,);
+        this.mm = obj.time.slice(3,);
         this.DD = obj.date.slice(8,);
         this.MM = obj.date.slice(5,7);
         this.YY = obj.date.slice(0,4);
     };
-
-    // TaskTimeConstruct.DDName = function() {
-    //     var dayName;
-    //     switch (this.dayWeek) {
-    //         case 0: dayName = 'Sunday'; break;
-    //         case 1: dayName = 'Monday'; break;
-    //         case 2: dayName = 'Tuesday'; break;
-    //         case 3: dayName = 'Wednesday'; break;
-    //         case 4: dayName = 'Thursday'; break;
-    //         case 5: dayName = 'Friday'; break;
-    //         case 6: dayName = 'Satursday'; break;
-    //     }
-
-    //     return dayName;
-    // };
 
     TaskTimeConstruct.prototype.MMName = function() {
         switch (this.MM) {
@@ -191,12 +188,18 @@ const uiController = (function() {
 
         taskDeadline = document.createElement('h4');
         taskDeadline.classList.add('task-deadline');
-        taskDeadline.innerText = endTime.MMName() + ' ' + endTime.DD + ', ' + endTime.YY;
+        taskDeadline.classList.add('tool-tip-parent');
+        if (endTime.MMName()) {
+            taskDeadline.innerText = endTime.MMName() + ' ' + endTime.DD + ', ' + endTime.YY;
+        } else {
+            taskDeadline.innerText = 'No Deadline Set';
+        }
         taskRight.appendChild(taskDeadline);
 
         taskDone = document.createElement('a');
         taskDone.classList.add('task-done');
         taskDone.setAttribute('id', 'btn-done');
+        taskDone.setAttribute('data-id', obj.id);
         taskRight.appendChild(taskDone);
 
         taskCM = document.createElement('img');
@@ -216,8 +219,71 @@ const uiController = (function() {
 
         inputFields[0].value = 'default';
     }
+
+    function updateDeadline(arr) {
+        deadlines = document.querySelectorAll('.task-deadline');
+
+        // for (let i = 0; i < arr.length; i++) {
+        //     endTime = new TaskTimeConstruct(arr[i]);
+        //     for (let j = 0; j < deadlines.length; j++) {
+        //         if (arr[i].id == deadlines[j].nextElementSibling.getAttribute('data-id')) {
+        //             if (endTime.MMName()) {
+        //                 deadlines[i].innerText = endTime.MMName() + ' ' + endTime.DD + ', ' + endTime.YY;
+        //             } else {
+        //                 deadlines[i].innerText = 'No Deadline Set';
+        //             };
+
+        //             var remainingWeeks, remainingDays, remainingHours, remainingMinutes;
+        //             tooltip = document.createElement('span');
+        //             tooltip.classList.add('tool-tip');
+
+        //             remainingDays = parseInt(endTime.DD) - new Date().getDate()
+
+        //             if (endTime.hh) {
+        //                 var futureDay, presentDay, timeDiff;
+        //                 futureDay = new Date(endTime.YY + '-' + endTime.MM + '-' + endTime.DD + ' ' + endTime.hh + ':' + endTime.mm);
+        //                 presentDay = new Date();
+
+        //                 console.log(futureDay)
+        //                 console.log(presentDay)
+        //                 delta = futureDay - presentDay;
+        //                 var d = Math.abs(date_future - date_now) / 1000;                           // delta
+        //                 var r = {};                                                                // result
+        //                 var s = {                                                                  // structure
+        //                     year: 31536000,
+        //                     month: 2592000,
+        //                     week: 604800, // uncomment row to ignore
+        //                     day: 86400,   // feel free to add your own row
+        //                     hour: 3600,
+        //                     minute: 60,
+        //                     second: 1
+        //                 };
+                        
+        //                 Object.keys(s).forEach(function(key){
+        //                     r[key] = Math.floor(d / s[key]);
+        //                     d -= r[key] * s[key];
+        //                 });
+                        
+        //                 // for example: {year:0,month:0,week:1,day:2,hour:34,minute:56,second:7}
+        //                 console.log(r);
+        //             } else {
+        //                 tooltip.innerText = 'No Deadline Set';
+        //             };
+
+        //             deadlines[i].appendChild(tooltip);
+        //         }
+                
+        //     }
+        // }
+
+        work in pr
+    }
     
     return {
+        test: function(arr) {
+            updateDeadline(arr)
+        },
+
         strings: domStrings,
 
         displayTasks: function(obj) {
@@ -244,8 +310,15 @@ const uiController = (function() {
 
         deleteTask: function(e) {
 
-            if (e.target.matches('a') || e.target.matches('img')) {
+            if (e.target.matches('a')) {
+                e.target.parentElement.parentElement.remove();
+
+                return e.target.getAttribute('data-id');
+            }
+            if (e.target.matches('img')) {
                 e.target.parentElement.parentElement.parentElement.remove();
+
+                return e.target.parentElement.getAttribute('data-id');
             }
         },
 
@@ -265,7 +338,15 @@ const controller = (function(uiCtrl, dataCtrl) {
 
         //update UI
         uiCtrl.displayTasks(newTask);
+
+        // updateDL();
     }
+
+    // function updateDL() {
+    //     tasks = dataCtrl.getTasks();
+
+    //     uiCtrl.test(tasks);
+    // }
 
     function startTime() {
         
@@ -283,6 +364,13 @@ const controller = (function(uiCtrl, dataCtrl) {
         }
     });
     document.querySelector(uiCtrl.strings.tasksContainer).addEventListener('click', function(e) {
-        uiCtrl.deleteTask(e);
+        e.target.style.backgroundColor = 'darkgreen';
+
+        if (e.target.matches('img')) {
+            e.target.parentElement.style.backgroundColor = 'darkgreen';
+        }
+        id = setTimeout(uiCtrl.deleteTask, 1500, e);
+
+        dataCtrl.delTask(id);
     })
 })(uiController, dataController);
