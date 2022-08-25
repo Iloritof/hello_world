@@ -146,10 +146,10 @@ class Controller {
     static addTask() {
         let ui = new UI;
         let newTask = ui.getinput()
-        ui.clearInput();
+        // ui.clearInput();
         Data.storeTask(newTask)
 
-        this.displayTasks()
+        this.displayTasks();
     }
 
     static displayTasks() {
