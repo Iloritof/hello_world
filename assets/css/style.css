@@ -6,6 +6,8 @@
     --color-gray: #a1a1a1;
     --color-grey: #f0f0f0;
     --color-white: #fff;
+
+    --color-success: #177430;
 }
 
 *,
@@ -298,7 +300,7 @@ TASKS
 .task-done {
     display: flex;
     width: 4rem;
-    background-color: var(--color-gray);
+    background-color: var(--color-tertiary);
     justify-content: center;
     margin-left: 2rem;
     cursor: pointer;
@@ -339,4 +341,40 @@ TASKS
     opacity: 0.5;
     display: inline-block;
     transform: translateY(150%);
+}
+
+
+/*****************************************
+***************** NOTICE *****************
+*****************************************/
+
+.notice {
+    margin: 10px auto 0px;
+    padding: 5px 10px;
+    transition: all .5s ease;
+    transform: translateY(-100%);
+    color: var(--color-white);
+    display: flex;
+}
+
+.notice-text {
+    flex: 1 0;
+}
+
+.notice-close {
+    flex: 0 0 3rem;
+    text-align: center;
+    cursor: pointer;
+}
+
+.success-notice {
+    background-color: var(--color-success);
+}
+
+.error-notice {
+    background-color: var(--color-tertiary);
+}
+
+.show-notice {
+    transform: translateY(0);
 }

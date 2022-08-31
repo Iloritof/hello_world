@@ -3,78 +3,86 @@ class Task {
         this.id = id;
         this.task = arr[1];
         this.priority = arr[0];
-        this.date = arr[2];
-        this.time = arr[3];
+        this.datetime = `${arr[2]} ${arr[3]}`;
     }
 }
 
 class UI {
-    constructor() { }
 
     getinput() {
         const taskInput = document.querySelector('#task-title');
+        let newTask, feedback;
 
         if (taskInput.value) {
-            var newTask = [
+            newTask = [
                 document.querySelector('#priority').value,
                 taskInput.value,
                 document.querySelector('#date').value,
                 document.querySelector('#time').value
-            ]
+            ];
+            feedback = [true];
         } else {
-            return 'Input a value';
+            newTask = null
+            feedback = [false, 'Please, Enter a task title!'];
         };
-
-        return newTask;
+        return [newTask, feedback];
     }
 
     displayTasks(arr) {
-        let tasksContainer = document.querySelector('.tasks');
-        let tasks = document.querySelectorAll('.tasks > *');
+        const tasksContainer = document.querySelector('.tasks');
+        const tasks = document.querySelectorAll('.tasks > *');
 
         tasks.forEach(task => {
             task.remove();
         })
 
         arr.forEach(obj => {
-            let task = document.createElement('div');
+            const task = document.createElement('div');
             task.classList.add('task');
 
-            let taskPriority = document.createElement('div');
+            const taskPriority = document.createElement('div');
             taskPriority.classList.add('task-priority');
             taskPriority.classList.add(obj.priority);
             task.appendChild(taskPriority);
 
-            let taskLeft = document.createElement('div');
+            const taskLeft = document.createElement('div');
             taskLeft.classList.add('task-left');
             task.appendChild(taskLeft);
 
-            let taskDesc = document.createElement('div');
+            const taskDesc = document.createElement('div');
             taskDesc.classList.add('task-desc');
             taskLeft.appendChild(taskDesc);
 
-            let taskTitle = document.createElement('h3');
+            const taskTitle = document.createElement('h3');
             taskTitle.classList.add('task-title');
             taskTitle.innerText = obj.task;
             taskDesc.appendChild(taskTitle);
 
-            let taskRight = document.createElement('div');
+            const taskRight = document.createElement('div');
             taskRight.classList.add('task-right');
             task.appendChild(taskRight);
 
-            let taskDeadline = document.createElement('h4');
+            const taskDeadline = document.createElement('h4');
             taskDeadline.classList.add('task-deadline');
             taskDeadline.classList.add('tool-tip-parent');
-            taskDeadline.innerText = 'work in progress';
+            if (obj.datetime !== ' ') {
+                taskDeadline.innerText = new Date(obj.datetime).toDateString();
+                const toolTip = document.createElement('p');
+                // toolTip.classList.add('tool-tip');
+                // toolTip.innerText = obj.
+                // taskDeadline.appendChild(toolTip);
+            }
+            if (obj.datetime === ' ')
+                taskDeadline.innerText = `No Deadline Set`
             taskRight.appendChild(taskDeadline);
 
-            let taskDone = document.createElement('a');
+            const taskDone = document.createElement('a');
             taskDone.classList.add('task-done');
             taskDone.setAttribute('id', 'btn-done');
             taskDone.setAttribute('data-id', obj.id);
             taskRight.appendChild(taskDone);
 
-            let taskCM = document.createElement('img');
+            const taskCM = document.createElement('img');
             taskCM.classList.add('checkmark');
             taskCM.setAttribute('src', 'assets/img/check-mark-svgrepo-com.svg');
             taskDone.appendChild(taskCM);
@@ -82,6 +90,59 @@ class UI {
             tasksContainer.appendChild(task);
         });
     }
+
+    clearValues() {
+        const inputFields = document.querySelectorAll('.input')
+
+        for (let i = 1; i < inputFields.length; i++) {
+            inputFields[i].value = '';
+        }
+
+        inputFields[0].value = 'default';
+    }
+
+    notify(success, message) {
+        let tNotify;
+        if (document.querySelector('.notice')) {
+            tNotify = '';
+            this.clearNotify()
+        }
+        const notification = document.createElement('div');
+        notification.classList.add('notice')
+        const notificationText = document.createElement('p');
+        notificationText.classList.add('notice-text')
+        notification.appendChild(notificationText)
+        const notificationButton = document.createElement('a')
+        notificationButton.classList.add('notice-close')
+        notificationButton.innerText = `x`
+        notification.appendChild(notificationButton)
+        if (success) {
+            notification.classList.add('success-notice');
+            notificationText.innerText = message;
+            notification.classList.add('show-notice');
+        }
+        if (!success) {
+            notification.classList.add('error-notice');
+            notificationText.innerText = message;
+            notification.classList.add('show-notice');
+        }
+        document.querySelector('.section-bottom').prepend((notification));
+
+        tNotify = setTimeout(this.clearNotify, 3000)
+    }
+
+    clearNotify(el) {
+        if (el)
+            el.parentElement.remove();
+        if (!el)
+            if (document.querySelector('.notice'))
+                document.querySelector('.notice').remove()
+    }
+
+    static timeUI(today) {
+        document.querySelector('.current-date').innerText = today.toDateString();
+        document.querySelector('.current-time').innerText = today.toLocaleTimeString();
+    };
 }
 
 class Data {
@@ -89,9 +150,13 @@ class Data {
         return JSON.parse(localStorage.getItem('taskList'));
     }
 
+    // static getSettings() {
+    //     return JSON.parse(localStorage.getItem('setting'));
+    // }
+
     static storeTask(arr) {
         let id, task;
-        let taskList = this.getTasks();
+        const taskList = this.getTasks();
 
         id = 0;
         if (taskList.length != 0) {
@@ -105,7 +170,7 @@ class Data {
     }
 
     static removeTask(id) {
-        let taskList = this.getTasks();
+        const taskList = this.getTasks();
 
         // taskList.forEach(task => {
         //     if (id === task.id) {
@@ -121,10 +186,17 @@ class Data {
 
         localStorage.setItem('taskList', JSON.stringify(taskList));
     }
+
+    static getTime() {
+        const today = new Date();
+        return today;
+    }
 }
 
 class Controller {
     static initializeApp() {
+        this.startTime()
+        const self = this
         document.querySelector('#submit').addEventListener('click', this.addTask)
         document.querySelector('.add-task').addEventListener('keypress', (e) => {
             if (e.keyCode === 13) {
@@ -132,6 +204,7 @@ class Controller {
             }
         })
         document.querySelector('.tasks').addEventListener('click', e => this.deleteTask(e))
+        document.querySelector('.section-bottom').addEventListener('click', e => this.removeNotice(e))
 
         if (localStorage.getItem('taskList') === null) {
             var taskList = JSON.stringify([])
@@ -139,35 +212,40 @@ class Controller {
         }
 
         if (localStorage.getItem('taskList') !== null) {
-            this.displayTasks()
+            this.displayTasks();
         }
-    }
+    };
 
     static addTask() {
-        let ui = new UI;
-        let newTask = ui.getinput()
-        // ui.clearInput();
-        Data.storeTask(newTask)
+        const ui = new UI;
+        const newTask = ui.getinput();
+        ui.clearValues();
 
-        this.displayTasks();
-    }
+        if (newTask[1][0]) {
+            Data.storeTask(newTask[0]);
+            Controller.displayTasks();
+            ui.notify(newTask[1][0], 'Tasks was added successfully!');
+        }
+        if (!newTask[1][0]) {
+            ui.notify(newTask[1][0], newTask[1][1]);
+        }
+    };
 
     static displayTasks() {
-        let ui = new UI;
-        let tasklist = Data.getTasks();
+        const ui = new UI;
+        const tasklist = Data.getTasks();
         ui.displayTasks(tasklist)
-    }
+    };
 
     static startTime() {
-
-        time = dataCtrl.getTime();
-        uiCtrl.updateTime(time);
-
-        setTimeout(startTime, 1000)
-    }
+        const today = Data.getTime();
+        UI.timeUI(today);
+        setInterval(this.startTime, 1000)
+    };
 
     static deleteTask(e) {
         let id;
+        const ui = new UI;
 
         if (e.target.matches('.checkmark')) {
             id = e.target.parentElement.getAttribute('data-id');
@@ -176,8 +254,14 @@ class Controller {
             id = e.target.getAttribute('data-id');
         }
         Data.removeTask(id);
+        ui.notify(true, 'Task was deleted successfully!')
         this.displayTasks()
+    };
 
+    static removeNotice(e) {
+        const ui = new UI;
+        if (e.target.matches('.notice-close'))
+            ui.clearNotify(e.target)
     }
 }
 
