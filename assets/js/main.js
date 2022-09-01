@@ -22,9 +22,9 @@ class Task {
             const ms = Math.floor(diff % SEC).toLocaleString('en-US', { minimumIntegerDigits: 4, useGrouping: false })
 
             if (days > 0)
-                return `${days} days, ${hrs}hrs, ${min} min, ${sec}.${ms} secs`;
+                return `${days} days, ${hrs}hrs, ${min} min`;
             else
-                return `${hrs}hrs, ${min} min, ${sec}.${ms} secs`;
+                return `${hrs}hrs, ${min} min`;
         }
         else
             return `Time's Up!!!`
