@@ -1,18 +1,18 @@
-const dataController = (function() {
+const dataController = (function () {
 
     var tasks = [];
 
     return {
-        getTime: function() {
+        getTime: function () {
             const today = new Date();
-    
+
             return {
                 seconds: today.getSeconds(),
                 minutes: today.getMinutes(),
                 hours: today.getHours(),
                 day: today.getDate(),
                 dayWeek: today.getDay(),
-                dayName: function() {
+                dayName: function () {
                     var dayName;
 
                     switch (this.dayWeek) {
@@ -24,13 +24,13 @@ const dataController = (function() {
                         case 5: dayName = 'Friday'; break;
                         case 6: dayName = 'Satursday'; break;
                     }
-            
+
                     return dayName;
                 },
                 month: today.getMonth(),
-                monthName: function() {
+                monthName: function () {
                     var currMonth;
-                    
+
                     switch (this.month) {
                         case 0: currMonth = 'January'; break;
                         case 1: currMonth = 'February'; break;
@@ -53,7 +53,7 @@ const dataController = (function() {
             }
         },
 
-        storeTask: function(obj) {
+        storeTask: function (obj) {
             // task.push(obj);
             var item;
             item = obj;
@@ -67,22 +67,22 @@ const dataController = (function() {
             }
         },
 
-        delTask: function(id) {
+        delTask: function (id) {
             for (let i = 0; i < tasks.length; i++) {
-                if(id == tasks[i].id) {
-                    tasks.splice(i,1);
+                if (id == tasks[i].id) {
+                    tasks.splice(i, 1);
                 };
             }
         },
 
-        getTasks: function() {
+        getTasks: function () {
             return tasks;
         }
     }
 })();
 
-const uiController = (function() {
-    
+const uiController = (function () {
+
     var domStrings = {
         addTaskContainer: '.add-task-content',
         inputFields: '.input',
@@ -120,7 +120,7 @@ const uiController = (function() {
 
         displaySeconds = displaySeconds + ' ' + session;
         displayTime = displayHours + ':' + displayMinutes;
-        displayDate = obj.dayName() + ', ' + obj.monthName() + ' ' + obj.day + ', ' + obj.year;
+        displayDate = `obj.dayName(), obj.monthName(), obj.day, obj.year`;
 
         document.querySelector(domStrings.uiDate).innerText = displayDate;
         document.querySelector(domStrings.uiTime).innerText = displayTime;
@@ -128,14 +128,14 @@ const uiController = (function() {
     };
 
     function TaskTimeConstruct(obj) {
-        this.hh = obj.time.slice(0,2);
+        this.hh = obj.time.slice(0, 2);
         this.mm = obj.time.slice(3,);
         this.DD = obj.date.slice(8,);
-        this.MM = obj.date.slice(5,7);
-        this.YY = obj.date.slice(0,4);
+        this.MM = obj.date.slice(5, 7);
+        this.YY = obj.date.slice(0, 4);
     };
 
-    TaskTimeConstruct.prototype.MMName = function() {
+    TaskTimeConstruct.prototype.MMName = function () {
         switch (this.MM) {
             case '01': currMonth = 'January'; break;
             case '02': currMonth = 'February'; break;
@@ -212,7 +212,7 @@ const uiController = (function() {
 
     function clearValues() {
         const inputFields = document.querySelectorAll(domStrings.inputFields)
-        
+
         for (let i = 1; i < inputFields.length; i++) {
             inputFields[i].value = '';
         }
@@ -258,12 +258,12 @@ const uiController = (function() {
         //                     minute: 60,
         //                     second: 1
         //                 };
-                        
+
         //                 Object.keys(s).forEach(function(key){
         //                     r[key] = Math.floor(d / s[key]);
         //                     d -= r[key] * s[key];
         //                 });
-                        
+
         //                 // for example: {year:0,month:0,week:1,day:2,hour:34,minute:56,second:7}
         //                 console.log(r);
         //             } else {
@@ -272,25 +272,25 @@ const uiController = (function() {
 
         //             deadlines[i].appendChild(tooltip);
         //         }
-                
+
         //     }
         // }
 
         work in pr
     }
-    
+
     return {
-        test: function(arr) {
+        test: function (arr) {
             updateDeadline(arr)
         },
 
         strings: domStrings,
 
-        displayTasks: function(obj) {
+        displayTasks: function (obj) {
             displayTask(obj);
         },
 
-        getInput: function() {
+        getInput: function () {
             const taskInput = document.querySelector(domStrings.inputTask);
 
             if (taskInput.value) {
@@ -308,7 +308,7 @@ const uiController = (function() {
             return newTask;
         },
 
-        deleteTask: function(e) {
+        deleteTask: function (e) {
 
             if (e.target.matches('a')) {
                 e.target.parentElement.parentElement.remove();
@@ -322,14 +322,14 @@ const uiController = (function() {
             }
         },
 
-        updateTime: function(obj) {
+        updateTime: function (obj) {
             timeUI(obj);
         }
     };
 })();
 
-const controller = (function(uiCtrl, dataCtrl) {
-    
+const controller = (function (uiCtrl, dataCtrl) {
+
     function addNewTask() {
         //get input
         newTask = uiCtrl.getInput();
@@ -349,7 +349,7 @@ const controller = (function(uiCtrl, dataCtrl) {
     // }
 
     function startTime() {
-        
+
         time = dataCtrl.getTime();
         uiCtrl.updateTime(time);
 
@@ -358,12 +358,12 @@ const controller = (function(uiCtrl, dataCtrl) {
 
     document.onload = startTime()
     document.querySelector(uiCtrl.strings.inputSubmit).addEventListener('click', addNewTask);
-    document.querySelector(uiCtrl.strings.addTaskContainer).addEventListener('keypress', function(e) {
+    document.querySelector(uiCtrl.strings.addTaskContainer).addEventListener('keypress', function (e) {
         if (e.keyCode === 13) {
             addNewTask();
         }
     });
-    document.querySelector(uiCtrl.strings.tasksContainer).addEventListener('click', function(e) {
+    document.querySelector(uiCtrl.strings.tasksContainer).addEventListener('click', function (e) {
         e.target.style.backgroundColor = 'darkgreen';
 
         if (e.target.matches('img')) {

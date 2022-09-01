@@ -1,91 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <!-- <link
+      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+      rel="stylesheet"
+    /> -->
 
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/style.css" />
     <title>Smart To-Do App</title>
-</head>
-<body>
-    
+  </head>
+  <body>
     <div class="container">
-        <header class="header">
-            <nav class="navigation">
-                
-            </nav>
-        </header>
+      <header class="header">
+        <nav class="navigation"></nav>
+      </header>
 
-        <main class="main">
-            <section class="section-top">
-                <div class="sect-container">
-                    <div class="display">
-                        <h1 class="heading">
-                            Smart To-do List
-                        </h1>
-                        <div class="time">
-                            <span class="current-time">%current-time%</span>:<span class="current-seconds">%seconds%</span>
-                        </div>
-                        <div class="current-date">
-                            %current-date%
-                        </div>
-                    </div>
-                    
-                    <div class="add-task">
-                        <div class="add-task-content">
-                            <div class="add-task-top">
-                                <select name="priority" id="priority" class="input input-priority">
-                                    <option value="default">-select priority-</option>
-                                    <option value="high">High</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="low">Low</option>
-                                </select>
-                                <input type="text" id="task-title" placeholder="What's on you mind?" class="input input-task" required>
-                            </div>
+      <main class="main">
+        <section class="section-top">
+          <div class="sect-container">
+            <div class="display">
+              <h1 class="heading">Smart To-do List</h1>
+              <div class="time">
+                <span class="current-time">%current-time%</span>
+              </div>
+              <div class="current-date">%current-date%</div>
+            </div>
 
-                            <div class="add-task-bottom">
-                                <input type="date" name="date" id="date" class="input input-date" >
-                                <input type="time" name="time" id="time" class="input input-time" >
-                                <button id="submit" href="" class="btn btn-primary">
-                                    Add Task
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+            <div class="add-task">
+              <div class="add-task-content">
+                <div class="add-task-top">
+                  <select
+                    name="priority"
+                    id="priority"
+                    class="input input-priority"
+                  >
+                    <option value="default">-select priority-</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                  </select>
+                  <input
+                    type="text"
+                    id="task-title"
+                    placeholder="What's on you mind?"
+                    class="input input-task"
+                    required
+                  />
                 </div>
-                
-            </section>
 
-            <section class="section-bottom">
-                <div class="tasklist-head">
-                    <div class="task-left">
-                        <h4 class="tasklist-title">
-                            Tasks
-                        </h4>
-                    </div>
-                    <div class="task-rt">
-                        <h4 class="tasklist-title-2">
-                            Task Deadline
-                        </h4>
-                    </div>
+                <div class="add-task-bottom">
+                  <input
+                    type="date"
+                    name="date"
+                    id="date"
+                    class="input input-date"
+                  />
+                  <input
+                    type="time"
+                    name="time"
+                    id="time"
+                    class="input input-time"
+                  />
+                  <button id="submit" href="" class="btn btn-primary">
+                    Add Task
+                  </button>
                 </div>
-                
-                <div class="tasks"></div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-                
+        <section class="section-bottom">
+          <div class="tasklist-head">
+            <div class="task-left">
+              <h4 class="tasklist-title">Tasks</h4>
+            </div>
+            <div class="task-rt">
+              <h4 class="tasklist-title-2">Task Deadline</h4>
+            </div>
+          </div>
 
-            </section>
-        </main>
+          <div class="tasks"></div>
+        </section>
+      </main>
 
-        <footer class="footer">
-
-        </footer>
+      <footer class="footer"></footer>
     </div>
 
-    <script src="./assets/js/app.js"></script>
-
-</body>
+    <script src="./assets/js/moment.js"></script>
+    <script src="./assets/js/main.js"></script>
+  </body>
 </html>
