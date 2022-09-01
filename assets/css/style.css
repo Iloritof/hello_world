@@ -35,7 +35,8 @@
 }
 
 html {
-    font-size: 62.5%;
+    /* font-size: 62.5%; */
+    font-size: 55%;
 }
 
 body {
@@ -50,7 +51,8 @@ body {
 }
 
 .container {
-    max-width: 120rem;
+    /* max-width: 120rem; */
+    width: 500px;
     margin: 0 auto;
     border-radius: .7rem;
     overflow: hidden;
@@ -63,7 +65,8 @@ body {
     grid-template-columns: 1fr;
     grid-template-rows: 2fr 3fr;
 
-    height: 95vh;
+    /* height: 95vh; */
+    height: 95%;
 }
 
 .section-top {
@@ -117,6 +120,7 @@ body {
     padding: .7rem 1.7rem;
     border-radius: .3rem;
     border: none;
+    height: 3rem;
 
     font-family: inherit;
     color: var(--color-dark);
@@ -322,8 +326,8 @@ TASKS
 .tool-tip {
     position: absolute;
     z-index: 2;
-    top: 0;
-    display: none;
+    top: 110%;
+    display: inline-block;
     right: 0;
     background-color: var(--color-dark);
     color: var(--color-grey);
@@ -334,13 +338,14 @@ TASKS
     line-height: 1;
     font-size: 12px;
     font-weight: 500;
-    transition: all .3s ease 10s;
+    transform-origin: 50% 0%;
+    transform: scaleY(0);
+    transition: all .3s ease;
 }
 
 .tool-tip-parent:hover .tool-tip {
-    opacity: 0.5;
-    display: inline-block;
-    transform: translateY(150%);
+    opacity: 0.7;
+    transform: scaleY(1);
 }
 
 

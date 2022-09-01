@@ -1,9 +1,33 @@
 class Task {
-    constructor(id, arr) {
-        this.id = id;
-        this.task = arr[1];
-        this.priority = arr[0];
-        this.datetime = `${arr[2]} ${arr[3]}`;
+    constructor(obj) {
+        this.id = obj.id;
+        this.task = obj.task;
+        this.priority = obj.priority;
+        this.date = obj.date;
+        this.time = obj.time;
+    }
+
+    remainingTime() {
+        const present = new Date();
+        const deadline = new Date(`${this.date} ${this.time}`)
+
+        if (present < deadline) {
+            const diff = Math.max(present, deadline) - Math.min(present, deadline)
+            const SEC = 1000, MIN = 60 * SEC, HRS = 60 * MIN, DAY = 24 * HRS;
+
+            const days = Math.floor(diff / DAY)
+            const hrs = Math.floor((diff % DAY) / HRS).toLocaleString('en-US', { minimumIntegerDigits: 2 })
+            const min = Math.floor((diff % HRS) / MIN).toLocaleString('en-US', { minimumIntegerDigits: 2 })
+            const sec = Math.floor((diff % MIN) / SEC).toLocaleString('en-US', { minimumIntegerDigits: 2 })
+            const ms = Math.floor(diff % SEC).toLocaleString('en-US', { minimumIntegerDigits: 4, useGrouping: false })
+
+            if (days > 0)
+                return `${days} days, ${hrs}hrs, ${min} min, ${sec}.${ms} secs`;
+            else
+                return `${hrs}hrs, ${min} min, ${sec}.${ms} secs`;
+        }
+        else
+            return `Time's Up!!!`
     }
 }
 
@@ -14,12 +38,13 @@ class UI {
         let newTask, feedback;
 
         if (taskInput.value) {
-            newTask = [
-                document.querySelector('#priority').value,
-                taskInput.value,
-                document.querySelector('#date').value,
-                document.querySelector('#time').value
-            ];
+            newTask = {
+                id: '',
+                task: taskInput.value,
+                priority: document.querySelector('#priority').value,
+                date: document.querySelector('#date').value,
+                time: document.querySelector('#time').value,
+            };
             feedback = [true];
         } else {
             newTask = null
@@ -28,7 +53,7 @@ class UI {
         return [newTask, feedback];
     }
 
-    displayTasks(arr) {
+    displayTasks(tasklist) {
         const tasksContainer = document.querySelector('.tasks');
         const tasks = document.querySelectorAll('.tasks > *');
 
@@ -36,7 +61,9 @@ class UI {
             task.remove();
         })
 
-        arr.forEach(obj => {
+        tasklist.forEach(singleTask => {
+            const obj = new Task(singleTask);
+
             const task = document.createElement('div');
             task.classList.add('task');
 
@@ -65,14 +92,14 @@ class UI {
             const taskDeadline = document.createElement('h4');
             taskDeadline.classList.add('task-deadline');
             taskDeadline.classList.add('tool-tip-parent');
-            if (obj.datetime !== ' ') {
-                taskDeadline.innerText = new Date(obj.datetime).toDateString();
+            if (obj.date !== '') {
+                taskDeadline.innerText = new Date(obj.date).toDateString();
                 const toolTip = document.createElement('p');
-                // toolTip.classList.add('tool-tip');
-                // toolTip.innerText = obj.
-                // taskDeadline.appendChild(toolTip);
+                toolTip.classList.add('tool-tip');
+                toolTip.innerText = obj.remainingTime()
+                taskDeadline.appendChild(toolTip);
             }
-            if (obj.datetime === ' ')
+            if (obj.date === '')
                 taskDeadline.innerText = `No Deadline Set`
             taskRight.appendChild(taskDeadline);
 
@@ -154,8 +181,8 @@ class Data {
     //     return JSON.parse(localStorage.getItem('setting'));
     // }
 
-    static storeTask(arr) {
-        let id, task;
+    static storeTask(task) {
+        let id;
         const taskList = this.getTasks();
 
         id = 0;
@@ -163,7 +190,7 @@ class Data {
             id = taskList[taskList.length - 1].id + 1;
         }
 
-        task = new Task(id, arr)
+        task.id = id
         taskList.push(task);
 
         localStorage.setItem('taskList', JSON.stringify(taskList))
@@ -249,12 +276,14 @@ class Controller {
 
         if (e.target.matches('.checkmark')) {
             id = e.target.parentElement.getAttribute('data-id');
+            Data.removeTask(id);
+            ui.notify(true, 'Task was deleted successfully!')
         }
         if (e.target.matches('#btn-done')) {
             id = e.target.getAttribute('data-id');
+            Data.removeTask(id);
+            ui.notify(true, 'Task was deleted successfully!')
         }
-        Data.removeTask(id);
-        ui.notify(true, 'Task was deleted successfully!')
         this.displayTasks()
     };
 
